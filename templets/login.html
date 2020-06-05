@@ -30,10 +30,14 @@
     <!-- YOUR CUSTOM CSS -->
     <link href="{% static 'css/custom.css' %}" rel="stylesheet">
 	 <style>
-	 	.errorlist {
+	 	.errorlist .info {
 	 		color: red;
 	 		font-weight: bold;
-	 	}
+		 }
+		 .info {
+		 color: red;
+		 font-weight: bold;
+		 }
 	 </style>
 </head>
 
@@ -60,6 +64,16 @@
 				</div>
 				<div class="divider"><span>Or</span></div>
 				<div class="form-group">
+					{% if messages %}
+					<ul class="messages">
+						{% for message in messages %}
+						<li{% if message.tags %} class="{{ message.tags }}" {% endif %}>
+							{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+							{{ message }}
+							</li>
+							{% endfor %}
+					</ul>
+					{% endif %}
 					{% for f in context %}
 
 
@@ -71,6 +85,7 @@
 						{{ f.errors }}
 					</span>
 					{% endfor %}
+					<div class="g-recaptcha" data-sitekey="6LcdJAAVAAAAAF2t7rVKW3uk4C-uVq8VbBOodrI7"></div>
 
 					<small><a href="reset_password">Forgot password?</a></small>
 				</div>
@@ -83,6 +98,7 @@
 	<!-- /login -->
 		
 	<!-- COMMON SCRIPTS -->
+	<script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <script src="{% static 'js/jquery-2.2.4.min.js' %}"></script>
     <script src="{% static 'js/common_scripts.js' %}"></script>
     <script src="{% static 'js/main.js' %}"></script>

@@ -10,23 +10,39 @@ from .utils import generate_token
 from django.core.mail import EmailMessage
 from django.conf import settings
 from django.views.generic import View
+from django.contrib import messages
+import json
+import requests
 # Create your views here.
 
 
 def login(request):
-    #username=m
     loginForm= LoginForm()
     if request.method=='POST':
-        loginForm=LoginForm(request.POST)
-        if loginForm.is_valid():
-            username=loginForm.cleaned_data['username']
-            password=loginForm.cleaned_data['password']
-            user=auth.authenticate(username=username,password=password)
-            if user is not None:
-                auth.login(request,user)
-                return redirect("/")
-            else:
-                print('Error')
+        client_key = request.POST.get('g-recaptcha-response')
+        secret_key = '6LcdJAAVAAAAAF2t7rVKW3uk4C-uVq8VbBOodrI7'
+        captchadata={
+            'secret':secret_key,
+            'response':client_key
+        }
+        r = requests.post(' https://www.google.com/recaptcha/api/siteverify', data=captchadata)
+        response=json.loads(r.text)
+        verify=response['success']
+        print(verify)
+        if verify==True:
+            loginForm=LoginForm(request.POST)
+            if loginForm.is_valid():
+                username=loginForm.cleaned_data['username']
+                password=loginForm.cleaned_data['password']
+                
+                user=auth.authenticate(username=username,password=password)
+                if user is not None:
+                    auth.login(request,user)
+                    return redirect("/")
+                else:
+                    messages.info(request, 'Invalid Username Or Password')
+        else:
+            messages.info(request, 'Please confirm you are not a robot')
     return render(request, 'login.html',{'context': loginForm})
 
 def register(request):
