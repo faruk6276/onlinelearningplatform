@@ -69,7 +69,7 @@ def register(request):
                 messages.info(request, 'Username already exist')
             elif User.objects.filter(email=email).exists():
                 print("ok1")
-                messages.info(request, 'You are already a register member')
+                messages.info(request, 'Your email already a registered')
             else:
                 print("ok2")
                 user=User.objects.create_user(username=uname,password=password,first_name=fname,last_name=lname,email=email)
@@ -94,7 +94,7 @@ def register(request):
                     [email],
                 )
                 email_message.send()
-
+                return render(request,'registration_done.html')
 
     #context={'form':form}
     return render(request, 'register.html', {'context': my_form})
@@ -104,26 +104,25 @@ def register(request):
 
 
 #New user activation function
-def ActivateAccountView(self,uidb64,token, *args, **kwargs):
+def ActivateAccountView(request,uidb64,token, *args, **kwargs):
     try:
-        print('ok0')
         uid=force_text(urlsafe_base64_decode(uidb64))
-        print('ok')
         user=User.objects.get(pk=uid)
     except Exception as idetifier:
         user=None
-        print('ok2')
-        
+       
     if user is not None and generate_token.check_token(user,token):
         user.is_active=True
         user.save()
-        print("Account activate successfully")
-        return redirect('login')
+        return render(request, 'useractivationdone.html')
+
+    else:
+        return render(request, '404.html')
  
 
 
 
- 
+
 def resetpass(request):
     reset=PasswordResetForm()
     if request.method == 'POST':
