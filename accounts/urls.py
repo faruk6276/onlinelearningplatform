@@ -8,7 +8,7 @@ from django.contrib.auth import views as auth_views
 urlpatterns = [
     path('login', views.login, name='login'),
     path('register', views.register, name='register'),
-    path('activate/<uidb64>/<token>',views.ActivateAccountView,name='activate'),
+    path('activate/<uidb64>/<token>/',views.ActivateAccountView,name='activate'),
     #path('resetpassword/<uidb64>/<token>',views.resetpassconf, name='resetpassconf'),
     #path('resetpass', views.resetpass, name='resetpass'),
     #path('resetdone', views.resetdone, name='resetdone'),

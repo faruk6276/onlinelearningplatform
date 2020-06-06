@@ -16,6 +16,9 @@ import requests
 # Create your views here.
 
 
+
+
+#Login Function
 def login(request):
     loginForm= LoginForm()
     if request.method=='POST':
@@ -45,6 +48,10 @@ def login(request):
             messages.info(request, 'Please confirm you are not a robot')
     return render(request, 'login.html',{'context': loginForm})
 
+
+
+
+#Registration Function
 def register(request):
     my_form = RegisterForm()
     if request.method=='POST':
@@ -56,34 +63,47 @@ def register(request):
             email=my_form.cleaned_data['email']
             password=my_form.cleaned_data['password']
             confirm_password=my_form.cleaned_data['confirm_password']
-            user=User.objects.create_user(username=uname,password=password,first_name=fname,last_name=lname,email=email)
-            user.is_active=False
-            user.save()
-            print('User created')
+            
+            if User.objects.filter(username=uname).exists():
+                print("ok0")
+                messages.info(request, 'Username already exist')
+            elif User.objects.filter(email=email).exists():
+                print("ok1")
+                messages.info(request, 'You are already a register member')
+            else:
+                print("ok2")
+                user=User.objects.create_user(username=uname,password=password,first_name=fname,last_name=lname,email=email)
+                user.is_active=False
+                user.save()
+                print('User created')
 
-            #return redirect('/')
-            current_site=get_current_site(request)
-            email_subject='Activate Your Account',
-            message=render_to_string('activate.html',
-            {
-                'user':user,
-                'domain':current_site.domain,
-                'uid':urlsafe_base64_encode(force_bytes(user.pk)),
-                'token':generate_token.make_token(user)
-            })
-            email_message = EmailMessage(
-                email_subject,
-                message,
-                settings.EMAIL_HOST_USER,
-                [email],
-            )
-            email_message.send()
+                #return redirect('/')
+                current_site=get_current_site(request)
+                email_subject='Activate Your Account',
+                message=render_to_string('activate.html',
+                {
+                    'user':user,
+                    'domain':current_site.domain,
+                    'uid':urlsafe_base64_encode(force_bytes(user.pk)),
+                    'token':generate_token.make_token(user)
+                })
+                email_message = EmailMessage(
+                    email_subject,
+                    message,
+                    settings.EMAIL_HOST_USER,
+                    [email],
+                )
+                email_message.send()
 
 
     #context={'form':form}
-    return render(request,'try.html', {'context':my_form})
+    return render(request, 'register.html', {'context': my_form})
 
 
+
+
+
+#New user activation function
 def ActivateAccountView(self,uidb64,token, *args, **kwargs):
     try:
         print('ok0')
@@ -99,6 +119,10 @@ def ActivateAccountView(self,uidb64,token, *args, **kwargs):
         user.save()
         print("Account activate successfully")
         return redirect('login')
+ 
+
+
+
  
 def resetpass(request):
     reset=PasswordResetForm()

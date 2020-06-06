@@ -31,6 +31,17 @@
 
 	<!-- YOUR CUSTOM CSS -->
 	<link href="{% static 'css/custom.css' %}" rel="stylesheet">
+	<style>
+		.errorlist {
+			color: red;
+			font-weight: bold;
+		}
+
+		.info {
+			color: red;
+			font-weight: bold;
+		}
+	</style>
 
 </head>
 
@@ -50,7 +61,15 @@
 			</figure>
 			<form method="POST" autocomplete=" off">
 				{% csrf_token %}
-
+			{% if messages %}
+				<ul class="messages">
+					{% for message in messages %}
+					<li{% if message.tags %} class="{{ message.tags }}" {% endif %}>
+						{{ message }}
+						</li>
+						{% endfor %}
+				</ul>
+				{% endif %}
 
 				{% for f in context %}
 
@@ -67,7 +86,6 @@
 				<div class="text-center add_top_10">Already have an acccount? <strong><a href="login">Sign
 							In</a></strong></div>
 			</form>
-			<div class="copy">© 2017 Udema</div>
 		</aside>
 	</div>
 	<!-- /login -->
