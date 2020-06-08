@@ -14,13 +14,13 @@ urlpatterns = [
     #path('resetdone', views.resetdone, name='resetdone'),
     #path('sendconfresetpass', views.sendconfresetpass, name='sendconfresetpass')
     path('reset_password/', auth_views.PasswordResetView.as_view(
-        template_name='resetpassword.html'), name="reset_password"),
+        template_name='accounts/resetpassword.html'), name="reset_password"),
     path('reset_password_sent/', auth_views.PasswordResetDoneView.as_view(
-         template_name='sendconfresetpass.html'), name="password_reset_done"),
+         template_name='accounts/sendconfresetpass.html'), name="password_reset_done"),
     path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(
-        template_name='resetpasswordconfirm.html'), name="password_reset_confirm"),
+        template_name='accounts/resetpasswordconfirm.html'), name="password_reset_confirm"),
     path('password_reset_complete/', auth_views.PasswordResetCompleteView.as_view(
-        template_name='resetpasswordcomplete.html'), name="password_reset_complete")
+        template_name='accounts/resetpasswordcomplete.html'), name="password_reset_complete")
 
 
 

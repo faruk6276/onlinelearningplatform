@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect
 from .forms import RegisterForm,LoginForm,PasswordResetForm
 from django.contrib.auth.models import User,auth
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate,login
 from django.contrib.sites.shortcuts import get_current_site 
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_decode,urlsafe_base64_encode
@@ -23,7 +23,7 @@ def login(request):
     loginForm= LoginForm()
     if request.method=='POST':
         client_key = request.POST.get('g-recaptcha-response')
-        secret_key = '6LcdJAAVAAAAAF2t7rVKW3uk4C-uVq8VbBOodrI7'
+        secret_key = '6LcdJAAVAAAAAF_wtKXGP5QmNDZ2TfAiN4VlLCX1'
         captchadata={
             'secret':secret_key,
             'response':client_key
@@ -31,7 +31,6 @@ def login(request):
         r = requests.post(' https://www.google.com/recaptcha/api/siteverify', data=captchadata)
         response=json.loads(r.text)
         verify=response['success']
-        print(verify)
         if verify==True:
             loginForm=LoginForm(request.POST)
             if loginForm.is_valid():
@@ -46,7 +45,7 @@ def login(request):
                     messages.info(request, 'Invalid Username Or Password')
         else:
             messages.info(request, 'Please confirm you are not a robot')
-    return render(request, 'login.html',{'context': loginForm})
+    return render(request, 'accounts/login.html',{'context': loginForm})
 
 
 
@@ -65,39 +64,38 @@ def register(request):
             confirm_password=my_form.cleaned_data['confirm_password']
             
             if User.objects.filter(username=uname).exists():
-                print("ok0")
                 messages.info(request, 'Username already exist')
             elif User.objects.filter(email=email).exists():
-                print("ok1")
                 messages.info(request, 'Your email already a registered')
             else:
-                print("ok2")
-                user=User.objects.create_user(username=uname,password=password,first_name=fname,last_name=lname,email=email)
-                user.is_active=False
-                user.save()
-                print('User created')
+                if(password==confirm_password):
+                    user=User.objects.create_user(username=uname,password=password,first_name=fname,last_name=lname,email=email)
+                    user.is_active=False
+                    user.save()
 
-                #return redirect('/')
-                current_site=get_current_site(request)
-                email_subject='Activate Your Account',
-                message=render_to_string('activate.html',
-                {
-                    'user':user,
-                    'domain':current_site.domain,
-                    'uid':urlsafe_base64_encode(force_bytes(user.pk)),
-                    'token':generate_token.make_token(user)
-                })
-                email_message = EmailMessage(
-                    email_subject,
-                    message,
-                    settings.EMAIL_HOST_USER,
-                    [email],
-                )
-                email_message.send()
-                return render(request,'registration_done.html')
+                    #return redirect('/')
+                    current_site=get_current_site(request)
+                    email_subject='Activate Your Account',
+                    message=render_to_string('activate.html',
+                    {
+                        'user':user,
+                        'domain':current_site.domain,
+                        'uid':urlsafe_base64_encode(force_bytes(user.pk)),
+                        'token':generate_token.make_token(user)
+                    })
+                    email_message = EmailMessage(
+                        email_subject,
+                        message,
+                        settings.EMAIL_HOST_USER,
+                        [email],
+                    )
+                    email_message.send()
+                    return render(request,'registration_done.html')
+                else:
+                    messages.info(request, 'Confirm password and password didnot match')
 
     #context={'form':form}
-    return render(request, 'register.html', {'context': my_form})
+    return render(request, 'accounts/register.html', {'context': my_form})
 
 
 
@@ -114,7 +112,7 @@ def ActivateAccountView(request,uidb64,token, *args, **kwargs):
     if user is not None and generate_token.check_token(user,token):
         user.is_active=True
         user.save()
-        return render(request, 'useractivationdone.html')
+        return render(request, 'accounts/useractivationdone.html')
 
     else:
         return render(request, '404.html')
