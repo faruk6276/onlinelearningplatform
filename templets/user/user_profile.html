@@ -65,12 +65,11 @@
 			<div class="row">
 				<aside class="col-lg-3" id="sidebar">
 					<div class="profile">
-						<figure><img src="http://via.placeholder.com/150x150/ccc/fff/teacher_2_small.jpg" alt="Teacher" class="rounded-circle"></figure>
+						<figure><img src="{{ request.user.profile.profile_picture.url }}" alt="Teacher"
+								class="rounded-circle" width="150" height="150"></figure>
 						<ul>
 							<li>UserName <span class="float-right">{{ username }}</span> </li>
-							<li>Students <span class="float-right">42</span></li>
-							<li>Lessons <span class="float-right">12</span></li>
-							<li>Courses <span class="float-right">15</span></li>
+							<li>Enrolled Courses <span class="float-right">15</span></li>
 						</ul>
 					</div>
 				</aside>
@@ -84,7 +83,7 @@
 							<p>Mussum ipsum cacilds, vidis litro abertis.</p>
 						</div>
 						<div class="wrapper_indent">
-							<form method="POST" autocomplete=" off">
+							<form method="POST" autocomplete=" off" enctype="multipart/form-data">
 								{% csrf_token %}
 								<!--<div class="access_social">
 					<a href="#0" class="social_bt facebook">Login with Facebook</a>
@@ -102,9 +101,9 @@
 											{% endfor %}
 									</ul>
 									{% endif %}
+
 									{% for f in context %}
-
-
+									
 									<span class="input">
 										{{ f }}
 										<label class="input_label">
@@ -112,10 +111,26 @@
 										</label>
 										{{ f.errors }}
 									</span>
-									{% endfor %}
 									
-
-
+									{% endfor %}
+									<br>
+									{% for f in profile %}
+										{% if forloop.first %}
+										<span class="input">
+											{{ f }}
+											<label class="input_label">
+												<span class="input__label-content">{{ f.label_tag}}</span>
+											</label>
+											{{ f.errors }}
+										</span>
+										{% else %}
+										<br>
+										{{ f.label_tag}}&nbsp;&nbsp;&nbsp;{{ f }}{{ f.errors }}
+										{% endif %}
+										
+										
+									{% endfor %}
+										
 								</div>
 								<br>
 								<input type="submit" class="btn_1 rounded full-width add_top_30" value="Update"><br>

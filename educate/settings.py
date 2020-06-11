@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
+    'users.apps.UsersConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -80,7 +81,10 @@ DATABASES = {
         'NAME': 'educate',
         'USER': 'root',
         'PASSWORD':'',
-        'HOST':'localhost'
+        'HOST':'localhost',
+        'OPTIONS': {
+            'sql_mode': 'traditional',
+        }
     }
 }
 
@@ -127,6 +131,9 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static")
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, "assets")
+MEDIA_URL = "/images/"
+MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
+
 
 
 

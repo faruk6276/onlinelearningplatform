@@ -13,6 +13,7 @@ from django.views.generic import View
 from django.contrib import messages
 import json
 import requests
+from users.models import Profile
 # Create your views here.
 
 
@@ -90,7 +91,7 @@ def register(request):
                         [email],
                     )
                     email_message.send()
-                    return render(request,'registration_done.html')
+                    return render(request, 'accounts/registration_done.html')
                 else:
                     messages.info(request, 'Confirm password and password didnot match')
 
@@ -111,7 +112,11 @@ def ActivateAccountView(request,uidb64,token, *args, **kwargs):
        
     if user is not None and generate_token.check_token(user,token):
         user.is_active=True
+        u = Profile.objects.create(uid_id=user.id)
+        u.save()
         user.save()
+        
+        
         return render(request, 'accounts/useractivationdone.html')
 
     else:
