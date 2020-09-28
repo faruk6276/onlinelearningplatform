@@ -11,3 +11,4 @@ class Profile(models.Model):
         default="default-profile-picture.jpg", null=True, blank=True)
     phonenumber = models.CharField(max_length=15, null=True, blank=True)
     date_created = models.DateTimeField(null=True, auto_now_add=True)
+    is_teacher = models.BooleanField(default=False)
