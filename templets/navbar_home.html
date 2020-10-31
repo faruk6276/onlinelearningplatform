@@ -11,7 +11,7 @@
                 alt=""></a>
     </div>
 <ul id="top_menu">
-    <li class="hidden_tablet"><a href="{% url 'profile'%}" class="btn_1 rounded">Profile</a></li>
+    <li class="hidden_tablet"><a href="{% url 'profile'%}" class="btn_1 rounded">{{user.username}}</a></li>
     <li><a href="{% url 'logout'%}" class="login">Logout</a></li>
     <li><a href="#0" class="search-overlay-menu-btn">Search</a></li>
 </ul>

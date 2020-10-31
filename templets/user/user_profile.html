@@ -24,8 +24,16 @@
 			<div class="row">
 				<aside class="col-lg-3" id="sidebar">
 					<div class="profile">
-						<figure><img src="{{ request.user.profile.profile_picture.url }}" alt="Teacher"
+						
+						{% if request.user.profile.profile_picture.url is not None%}
+							<figure><img src="{{ request.user.profile.profile_picture.url }}" alt="User profile"
 								class="rounded-circle" width="150" height="150"></figure>
+						{% else %}
+								<figure><img src="{% static 'img/profile.png' %}" alt="User Profile"
+								class="rounded-circle" width="150" height="150"></figure>
+						{% endif %}
+							
+						
 						<ul>
 							<li>UserName <span class="float-right">{{ username }}</span> </li>
 							<li>Enrolled Courses <span class="float-right">15</span></li>
