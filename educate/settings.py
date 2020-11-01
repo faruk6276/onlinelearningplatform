@@ -25,7 +25,7 @@ SECRET_KEY = 'm@%1*kuu9m@2hogmbfdb6*sm0vecc74sj!02#ha-o)&x3((mn_'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['almomin.org','127.0.0.1','localhost' ]
 
 
 # Application definition
@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'django_extensions'
 
 ]
 SITE_ID = 1 
