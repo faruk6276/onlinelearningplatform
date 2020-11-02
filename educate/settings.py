@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
-    'django_extensions'
+    'django_extensions',
+    'allauth.socialaccount.providers.facebook',
 
 ]
 SITE_ID = 1 
@@ -150,7 +151,7 @@ MEDIA_URL = "/images/"
 MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
 
 
-
+LOGIN_REDIRECT_URL='/'
 
 #Email Credentials
 EMAIL_HOST = EMAIL_HOST
